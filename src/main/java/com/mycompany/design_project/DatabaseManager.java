@@ -8,7 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
-    import java.sql.Connection;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,9 +16,9 @@ import java.sql.Statement;
 public class DatabaseManager {
 
     // JDBC URL, username, and password of MySQL server
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String USERNAME = "your_username";
-    private static final String PASSWORD = "your_password";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "Sho!166sho";
 
     public static void main(String[] args) {
         try {
