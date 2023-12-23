@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public class AppleMobile implements Mobile {
    private String brand;
     private String model;
@@ -64,5 +65,5 @@ public class AppleMobile implements Mobile {
     @Override
     public int getBatteryCapacity() {
         return batteryCapacity;
-    } 
+    }
 }

@@ -64,4 +64,6 @@ public class SonyMobile implements Mobile {
     public int getBatteryCapacity() {
         return batteryCapacity;
     }
+
+    
 }

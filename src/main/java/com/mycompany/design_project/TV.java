@@ -9,7 +9,7 @@ package com.mycompany.design_project;
  * @author shahd
  */
 public interface TV {
-    public String getBrand();
+      public String getBrand();
     public String getModel();
     public double getScreenSize();
     public String getResolution();

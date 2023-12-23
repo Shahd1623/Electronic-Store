@@ -9,6 +9,7 @@ package com.mycompany.design_project;
  * @author shahd
  */
 public interface Mobile {
+ 
     public String displayInfo();
     public String getBrand();
     public String getModel();

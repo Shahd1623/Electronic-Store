@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public class SamsungTV implements TV {
    private String brand;
     private String model;

@@ -8,7 +8,8 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
-public class SamsungMobile implements Mobile {
+public class SamsungMobile implements Mobile{
+    private int id;
     private String brand;
     private String model;
     private int storageCapacityGB;
@@ -17,7 +18,8 @@ public class SamsungMobile implements Mobile {
     private int batteryCapacity;
 
     // Constructor for SamsungMobile
-    public SamsungMobile(String brand, String model,int storageCapacityGB, String operatingSystem, double screenSize,int batteryCapacity) {
+    public SamsungMobile(String brand, String model, int storageCapacityGB, String operatingSystem, double screenSize, int batteryCapacity) {
+        this.id=id;
         this.brand = brand;
         this.model = model;
         this.storageCapacityGB = storageCapacityGB;
@@ -28,12 +30,17 @@ public class SamsungMobile implements Mobile {
 
     @Override
     public String displayInfo() {
-        return "Brand: " + brand +
+        return  "SamsungId: "+id+
+                "\nBrand: " + brand +
                 "\nModel: " + model +
                 "\nStorage Capacity: " + storageCapacityGB + "GB" +
                 "\nOperating System: " + operatingSystem +
                 "\nScreen Size: " + screenSize + " inches" +
                 "\nBattery Capacity: " + batteryCapacity + " mAh";
+    }
+
+    public int getid() {
+        return id;
     }
 
     @Override

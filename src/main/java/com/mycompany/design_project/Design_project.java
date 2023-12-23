@@ -1,227 +1,96 @@
+///*
+// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+// */
+//
+//package com.mycompany.design_project;
+//
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
 package com.mycompany.design_project;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 
-/**
- *
- * @author shahd
- */
-
-   
 public class Design_project {
-//public class Client {
-
     public static void main(String[] args) {
-        // Create instances using the creators
-        ElectronicStoreFactory samsungStore = new SamsungCreator();
+        // Example of creating objects using the factory pattern
+        ElectronicStoreFactory samsungFactory = new SamsungCreator();
+        Mobile samsungMobile = samsungFactory.createMobile("Samsung", "Galaxy S21", 128, "Android", 6.2, 4000);
+        TV samsungTV = samsungFactory.createTV("Samsung", "Smart TV", 55.0, "4K");
+        Laptop samsungLaptop = samsungFactory.createLaptop("Samsung", "Notebook 9", "Intel i7", 16, 512, 2.5);
 
-        // Create mobile instance and save to the database
-        Mobile samsungMobile = samsungStore.createMobile("Samsung", "Galaxy S21", 128, "Android", 6.2, 4000);
-        saveMobileToDatabase(samsungMobile);
+        ElectronicStoreFactory sonyFactory = new SonyCreator();
+        Mobile sonyMobile = sonyFactory.createMobile("Sony", "Xperia 1", 256, "Android", 6.5, 3500);
+        TV sonyTV = sonyFactory.createTV("Sony", "Bravia", 65.0, "8K");
+        Laptop sonyLaptop = sonyFactory.createLaptop("Sony", "VAIO", "Intel i5", 8, 256, 2.0);
 
-        // Fetch mobile data from the database
-        Mobile fetchedSamsungMobile = fetchMobileFromDatabase("Samsung", "Galaxy S21");
+        ElectronicStoreFactory appleFactory = new AppleCreator();
+        Mobile appleMobile = appleFactory.createMobile("Apple", "iPhone 13", 256, "iOS", 6.1, 3110);
+        TV appleTV = appleFactory.createTV("Apple", "Apple TV 4K", 50.0, "4K");
+        Laptop appleLaptop = appleFactory.createLaptop("Apple", "MacBook Pro", "M1 Pro", 16, 512, 1.9);
 
-        // Display information
-        if (fetchedSamsungMobile != null) {
-            System.out.println(fetchedSamsungMobile.displayInfo());
+        // Displaying information about the created objects
+        displayInfo(samsungMobile);
+        displayInfo(samsungTV);
+        displayInfo(samsungLaptop);
+
+        displayInfo(sonyMobile);
+        displayInfo(sonyTV);
+        displayInfo(sonyLaptop);
+
+        displayInfo(appleMobile);
+        displayInfo(appleTV);
+        displayInfo(appleLaptop);
+
+        // Example of using DataAccess class
+        DataAcess dataAccess = new DataAcess();
+
+        // Example of selecting all SonyMobile objects from the database
+        ArrayList<SonyMobile> sonyMobileList = dataAccess.SelectAll();
+        System.out.println("\nAll Sony Mobiles:");
+        for (SonyMobile sony : sonyMobileList) {
+            displayInfo(sony);
+        }
+
+        // Example of selecting a SonyMobile object by model from the database
+        String modelToSearch = "Xperia 1";
+        SonyMobile foundSonyMobile = dataAccess.Selectbymodel(modelToSearch);
+        if (foundSonyMobile != null) {
+            System.out.println("\nFound Sony Mobile by Model '" + modelToSearch + "':");
+            displayInfo(foundSonyMobile);
         } else {
-            System.out.println("Mobile not found in the database.");
+            System.out.println("\nSony Mobile by Model '" + modelToSearch + "' not found.");
         }
 
-        // Create TV instance and save to the database
-        TV samsungTV = samsungStore.createTV("Samsung", "QLED", 55.0, "4K UHD");
-        saveTVToDatabase(samsungTV);
-
-        // Fetch TV data from the database
-        TV fetchedSamsungTV = fetchTVFromDatabase("Samsung", "QLED");
-
-        // Display information
-        if (fetchedSamsungTV != null) {
-            System.out.println(fetchedSamsungTV.displayInfo());
+        // Example of inserting a new SonyMobile object into the database
+        SonyMobile newSonyMobile = new SonyMobile("Sony", "New Model", 128, "Android", 6.0, 3000);
+        int insertResult = dataAccess.insertSonyMobile(newSonyMobile);
+        if (insertResult > 0) {
+            System.out.println("\nNew Sony Mobile inserted successfully.");
         } else {
-            System.out.println("TV not found in the database.");
+            System.out.println("\nFailed to insert new Sony Mobile.");
         }
 
-        // Create Laptop instance and save to the database
-        Laptop samsungLaptop = samsungStore.createLaptop("Samsung", "Galaxy Book Pro", "Intel i7", 16, 512, 1.8);
-        saveLaptopToDatabase(samsungLaptop);
-
-        // Fetch Laptop data from the database
-        Laptop fetchedSamsungLaptop = fetchLaptopFromDatabase("Samsung", "Galaxy Book Pro");
-
-        // Display information
-        if (fetchedSamsungLaptop != null) {
-            System.out.println(fetchedSamsungLaptop.displayInfo());
+        // Example of deleting a SonyMobile object by model from the database
+        String modelToDelete = "New Model";
+        int deleteResult = dataAccess.deleteSonyMobilebymodel(modelToDelete);
+        if (deleteResult > 0) {
+            System.out.println("\nSony Mobile with Model '" + modelToDelete + "' deleted successfully.");
         } else {
-            System.out.println("Laptop not found in the database.");
+            System.out.println("\nFailed to delete Sony Mobile with Model '" + modelToDelete + "'.");
         }
     }
 
-    private static void saveMobileToDatabase(Mobile mobile) {
-         String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = "......";
-        
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "INSERT INTO Mobiles (brand, model, storageCapacityGB, operatingSystem, screenSize, batteryCapacity) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, mobile.getBrand());
-                statement.setString(2, mobile.getModel());
-                statement.setInt(3, mobile.getStorageCapacityGB());
-                statement.setString(4, mobile.getOperatingSystem());
-                statement.setDouble(5, mobile.getScreenSize());
-                statement.setInt(6, mobile.getBatteryCapacity());
-
-                statement.executeUpdate();
-                System.out.println("Mobile data saved to the database.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private static void displayInfo(Mobile mobile) {
+        System.out.println("\n" + mobile.displayInfo());
     }
 
-    private static Mobile fetchMobileFromDatabase(String brand, String model) {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = ".......";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "SELECT * FROM Mobiles WHERE brand = ? AND model = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, brand);
-                statement.setString(2, model);
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return new SamsungMobile(
-                                resultSet.getString("brand"),
-                                resultSet.getString("model"),
-                                resultSet.getInt("storageCapacityGB"),
-                                resultSet.getString("operatingSystem"),
-                                resultSet.getDouble("screenSize"),
-                                resultSet.getInt("batteryCapacity")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null; // Return null if not found
+    private static void displayInfo(TV tv) {
+        System.out.println("\n" + tv.displayInfo());
     }
 
-    private static void saveTVToDatabase(TV tv) {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = ".....";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "INSERT INTO TVs (brand, model, screenSize, resolution) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, tv.getBrand());
-                statement.setString(2, tv.getModel());
-                statement.setDouble(3, tv.getScreenSize());
-                statement.setString(4, tv.getResolution());
-
-                statement.executeUpdate();
-                System.out.println("TV data saved to the database.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static TV fetchTVFromDatabase(String brand, String model) {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = ".....";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "SELECT * FROM TVs WHERE brand = ? AND model = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, brand);
-                statement.setString(2, model);
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return new SamsungTV(
-                                resultSet.getString("brand"),
-                                resultSet.getString("model"),
-                                resultSet.getDouble("screenSize"),
-                                resultSet.getString("resolution")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null; // Return null if not found
-    }
-
-    private static void saveLaptopToDatabase(Laptop laptop) {
-        String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = ".....";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "INSERT INTO Laptops (brand, model, processor, ramSize, storageCapacity, weight) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, laptop.getBrand());
-                statement.setString(2, laptop.getModel());
-                statement.setString(3, laptop.getProcessor());
-                statement.setInt(4, laptop.getRAMSize());
-                statement.setInt(5, laptop.getStorageCapacity());
-                statement.setDouble(6, laptop.getWeight());
-
-                statement.executeUpdate();
-                System.out.println("Laptop data saved to the database.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static Laptop fetchLaptopFromDatabase(String brand, String model) {
-         String jdbcUrl = "jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=CONVERT_TO_NULL [root on Default schema]";
-        String username = "root";
-        String password = ".....";
-
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-            String sql = "SELECT * FROM Laptops WHERE brand = ? AND model = ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, brand);
-                statement.setString(2, model);
-
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return new SamsungLaptop(
-                                resultSet.getString("brand"),
-                                resultSet.getString("model"),
-                                resultSet.getString("processor"),
-                                resultSet.getInt("ramSize"),
-                                resultSet.getInt("storageCapacity"),
-                                resultSet.getDouble("weight")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return null; // Return null if not found
+    private static void displayInfo(Laptop laptop) {
+        System.out.println("\n" + laptop.displayInfo());
     }
 }
-

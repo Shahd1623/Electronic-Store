@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public class AppleLaptop implements Laptop {
     private String brand;
     private String model;

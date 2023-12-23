@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public class SamsungLaptop implements Laptop{
     private String brand;
     private String model;

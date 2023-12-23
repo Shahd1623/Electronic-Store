@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public interface Laptop {
     public String getBrand();
     public String getModel();
@@ -16,4 +17,5 @@ public interface Laptop {
     public int getStorageCapacity();
     public double getWeight();
     public String displayInfo();
+
 }

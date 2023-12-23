@@ -8,6 +8,7 @@ package com.mycompany.design_project;
  *
  * @author shahd
  */
+
 public class SonyCreator extends ElectronicStoreFactory{
     @Override
     public Mobile createMobile(String brand, String model, int storageCapacityGB, String operatingSystem, double screenSize, int batteryCapacity) {
