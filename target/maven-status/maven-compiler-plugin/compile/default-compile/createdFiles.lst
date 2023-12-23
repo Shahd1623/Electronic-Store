@@ -1,5 +1,6 @@
 com\mycompany\design_project\ElectronicStoreFactory.class
 com\mycompany\design_project\SonyCreator.class
+com\mycompany\design_project\DataAcess.class
 com\mycompany\design_project\SonyLaptop.class
 com\mycompany\design_project\Design_project.class
 com\mycompany\design_project\AppleTV.class
@@ -8,7 +9,6 @@ com\mycompany\design_project\SamsungCreator.class
 com\mycompany\design_project\SonyMobile.class
 com\mycompany\design_project\AppleCreator.class
 com\mycompany\design_project\Mobile.class
-com\mycompany\design_project\DatabaseManager.class
 com\mycompany\design_project\TV.class
 com\mycompany\design_project\SamsungTV.class
 com\mycompany\design_project\SonyTV.class
